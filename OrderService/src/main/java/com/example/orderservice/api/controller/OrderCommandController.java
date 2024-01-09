@@ -26,6 +26,7 @@ public class OrderCommandController {
                 .productId(orderRestModel.getProductId())
                 .quantity(orderRestModel.getQuantity())
                 .orderStatus(OrderStatus.CREATED.toString())
+                .userId(orderRestModel.getUserId())
                 .build();
         commandGateway.sendAndWait(createOrderCommand);
 
