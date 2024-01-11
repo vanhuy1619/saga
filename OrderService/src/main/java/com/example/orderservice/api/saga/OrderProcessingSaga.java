@@ -38,6 +38,7 @@ public class OrderProcessingSaga {
                 = new GetUserPaymentDetailsQuery(event.getUserId());
 
         User user = User.builder().build();
+        System.out.println(user);
         try {
             user = queryGateway.query(getUserPaymentDetailsQuery, ResponseTypes.instanceOf(User.class)).join();
         } catch (Exception e) {

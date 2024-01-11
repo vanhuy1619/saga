@@ -1,9 +1,10 @@
-package com.example.productcommandservice.services;
+package com.example.productcommandservice.command.services;
 
-import com.example.productcommandservice.config.ProductConfig;
-import com.example.productcommandservice.dto.ProductEvent;
-import com.example.productcommandservice.entity.Product;
-import com.example.productcommandservice.repositories.ProductRepository;
+import com.example.productcommandservice.command.config.ProductConfig;
+import com.example.productcommandservice.command.dto.ProductCommandEvent;
+import com.example.productcommandservice.command.entity.ProductCommand;
+import com.example.productcommandservice.command.repositories.ProductRepository;
+import com.example.productcommandservice.common.type.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -14,26 +15,29 @@ public class ProductCommandService {
     private ProductRepository repository;
 
     @Autowired
-    private KafkaTemplate<String, ProductEvent> kafkaTemplate;
+    private KafkaTemplate<String, ProductCommandEvent> kafkaTemplate;
 
     @Autowired
     private ProductConfig productConfig;
 
-    public Product createProduct(ProductEvent productEvent){
-        Product productDO = repository.save(productEvent.getProduct());
-        ProductEvent event=new ProductEvent("CreateProduct", productDO);
-        kafkaTemplate.send(productConfig.getTopic(), event);
+    public ProductCommand createProduct(ProductType productType){
+        ProductCommandEvent productCommandEvent = ProductCommandEvent.builder()
+                .type("CreateProduct")
+                .product(new ProductCommand(productType))
+                .build();
+        ProductCommand productDO = repository.save(productCommandEvent.getProduct());
+        kafkaTemplate.send(productConfig.getTopic(), productCommandEvent);
         return productDO;
     }
 
-    public Product updateProduct(long id,ProductEvent productEvent){
-        Product existingProduct = repository.findById(id).get();
-        Product newProduct=productEvent.getProduct();
+    public ProductCommand updateProduct(long id, ProductType productType){
+        ProductCommand existingProduct = repository.findById(id).get();
+        ProductCommand newProduct = new ProductCommand(productType);
         existingProduct.setName(newProduct.getName());
         existingProduct.setPrice(newProduct.getPrice());
         existingProduct.setDescription(newProduct.getDescription());
-        Product productDO = repository.save(existingProduct);
-        ProductEvent event=new ProductEvent("UpdateProduct", productDO);
+        ProductCommand productDO = repository.save(existingProduct);
+        ProductCommandEvent event = new ProductCommandEvent("UpdateProduct", productDO);
         kafkaTemplate.send(productConfig.getTopic(), event);
         return productDO;
     }

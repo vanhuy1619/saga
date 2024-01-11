@@ -1,4 +1,4 @@
-package com.example.productcommandservice.kafka;
+package com.example.productcommandservice.common.kafka;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.http.client.config.RequestConfig;

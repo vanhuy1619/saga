@@ -1,4 +1,4 @@
-package com.example.productcommandservice.utils;
+package com.example.productcommandservice.common.utils;
 
 import io.kcache.CacheUpdateHandler;
 import org.apache.kafka.common.TopicPartition;

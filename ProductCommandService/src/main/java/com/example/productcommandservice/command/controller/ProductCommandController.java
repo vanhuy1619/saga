@@ -1,9 +1,10 @@
-package com.example.productcommandservice.controller;
+package com.example.productcommandservice.command.controller;
 
 
-import com.example.productcommandservice.dto.ProductEvent;
-import com.example.productcommandservice.entity.Product;
-import com.example.productcommandservice.services.ProductCommandService;
+import com.example.productcommandservice.command.entity.ProductCommand;
+import com.example.productcommandservice.command.services.ProductCommandService;
+import com.example.productcommandservice.command.dto.ProductCommandEvent;
+import com.example.productcommandservice.common.type.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,12 @@ public class ProductCommandController {
     private ProductCommandService commandService;
 
     @PostMapping
-    public Product createProduct(@RequestBody ProductEvent productEvent) {
-        return commandService.createProduct(productEvent);
+    public ProductCommand createProduct(@RequestBody ProductType request) {
+        return commandService.createProduct(request);
     }
 
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable long id, @RequestBody ProductEvent productEvent) {
-        return commandService.updateProduct(id, productEvent);
+    public ProductCommand updateProduct(@PathVariable long id, @RequestBody ProductType request) {
+        return commandService.updateProduct(id, request);
     }
 }

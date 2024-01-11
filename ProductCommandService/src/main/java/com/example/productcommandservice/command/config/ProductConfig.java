@@ -1,4 +1,4 @@
-package com.example.productcommandservice.config;
+package com.example.productcommandservice.command.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

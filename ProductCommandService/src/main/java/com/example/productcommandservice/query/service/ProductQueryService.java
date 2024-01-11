@@ -1,16 +1,21 @@
 package com.example.productcommandservice.query.service;
 
-import com.example.productcommandservice.query.dto.ProductEvent;
+import com.example.productcommandservice.command.dto.ProductCommandEvent;
+import com.example.productcommandservice.common.utils.JsonUtils;
+import com.example.productcommandservice.query.dto.ProductQueryEvent;
 import com.example.productcommandservice.query.entity.ProductQuery;
 import com.example.productcommandservice.query.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductQueyService {
+public class ProductQueryService {
     @Autowired
     private ProductRepository repository;
 
@@ -18,17 +23,20 @@ public class ProductQueyService {
         return repository.findAll();
     }
 
-    @KafkaListener(topics = "${product-command.topic}",groupId = "${product-command.groupId}", autoStartup = "${product-command.autoStartup}")
-    public void processProductEvents(ProductEvent productEvent) {
-        ProductQuery product = productEvent.getProduct();
-        if (productEvent.getType().equals("CreateProduct")) {
+    @KafkaListener(topics = "${product-command.topic}", groupId = "${product-command.groupId}", autoStartup = "${product-command.autoStartup}")
+    public void processProductEvents(@Payload ProductCommandEvent message, @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition) {
+        System.out.println(message);
+        ProductQueryEvent productQueryEvent = JsonUtils.fromJson(JsonUtils.toJson(message), ProductQueryEvent.class);
+
+        ProductQuery product = productQueryEvent.getProduct();
+        if (productQueryEvent.getType().equals("CreateProduct")) {
+            product.setIdCommand(message.getProduct().getId());
             repository.save(product);
         }
-        if (productEvent.getType().equals("UpdateProduct")) {
-            ProductQuery existingProduct = repository.findById(product.getId()).get();
+        if (productQueryEvent.getType().equals("UpdateProduct")) {
+            ProductQuery existingProduct = repository.findByIdCommand(product.getIdCommand()).get();
+            System.out.println(existingProduct);
             existingProduct.setName(product.getName());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setDescription(product.getDescription());
             repository.save(existingProduct);
         }
     }

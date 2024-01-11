@@ -1,9 +1,11 @@
-package com.example.productcommandservice.command.repositories;
+package com.example.productcommandservice.query.repositories;
 
-import com.example.productcommandservice.command.entity.Product;
+import com.example.productcommandservice.query.entity.ProductQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-@Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+@Repository("queryProductRepository")
+public interface ProductRepository extends JpaRepository<ProductQuery, Long> {
+    Optional<ProductQuery> findByIdCommand(Long idCommand);
 }

@@ -1,6 +1,7 @@
-package com.example.productcommandservice.kafka;
+package com.example.productcommandservice.common.kafka;
 
-import com.example.productcommandservice.dto.ProductEvent;
+import com.example.productcommandservice.command.dto.ProductCommandEvent;
+import com.example.productcommandservice.common.type.ProductType;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ public class KafkaProducerConfig {
     private String bootstrapServer;
 
     @Bean
-    public ProducerFactory<String, ProductEvent> producerFactory() {
+    public ProducerFactory<String, ProductCommandEvent> producerFactory() {
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -30,7 +31,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ProductEvent> kafkaTemplate() {
+    public KafkaTemplate<String, ProductCommandEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

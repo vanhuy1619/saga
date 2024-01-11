@@ -1,6 +1,6 @@
-package com.example.productcommandservice.kafka;
+package com.example.productcommandservice.common.kafka;
 
-import com.example.productcommandservice.utils.StringUpdateHandler;
+import com.example.productcommandservice.common.utils.StringUpdateHandler;
 import io.kcache.Cache;
 import io.kcache.CacheType;
 import io.kcache.KafkaCache;
@@ -11,7 +11,6 @@ import org.apache.kafka.common.serialization.Serdes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import java.util.Properties;
 
 @Configuration

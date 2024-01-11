@@ -38,7 +38,7 @@ public class OrderAggregate {
         AggregateLifecycle.apply(orderCreatedEvent); //áp dụng sự kiện (events) và thay đổi trạng thái của aggregate
     }
 
-    @EventSourcingHandler
+    @EventSourcingHandler //@EventSourcingHandler. Các hàm này sẽ được gọi khi các event gắn liền với chúng xuất hiện.
     public void on(OrderCreatedEvent event) {
         this.orderStatus = event.getOrderStatus();
         this.userId = event.getUserId();
